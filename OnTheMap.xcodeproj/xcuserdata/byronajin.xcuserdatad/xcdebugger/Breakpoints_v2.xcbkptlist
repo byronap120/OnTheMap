@@ -151,48 +151,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "5150CB1A-1695-4D10-99DA-E08028344C3C"
-            shouldBeEnabled = "No"
+            uuid = "BF000BBD-D8E3-4F6E-A88F-BFC9A3EADDB9"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "OnTheMap/Model/UdacityAPI Client/UdacityAPI.swift"
+            filePath = "OnTheMap/Controller/StudentsTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "45"
-            endingLineNumber = "45"
-            landmarkName = "requestUserSesion(username:password:completionHandler:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "509FB74A-1199-4602-885E-F0DEB0BACA35"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "OnTheMap/Model/UdacityAPI Client/UdacityAPI.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "57"
-            endingLineNumber = "57"
-            landmarkName = "requestUserSesion(username:password:completionHandler:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6D4F350E-FABD-4AA8-92A7-EE7AB41D1090"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "OnTheMap/Model/UdacityAPI Client/UdacityAPI.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
-            landmarkName = "requestUserSesion(username:password:completionHandler:)"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
+            landmarkName = "handleGetStudentLocation(studentsLocation:error:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

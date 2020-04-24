@@ -1,5 +1,5 @@
 //
-//  Session.swift
+//  UserSession.swift
 //  OnTheMap
 //
 //  Created by Byron Ajin on 4/19/20.
@@ -8,7 +8,6 @@
 
 import Foundation
 
-struct Session: Codable {
-    let id: String
-    let expiration: String
+struct UserSession: Codable {
+    let account: Account
 }

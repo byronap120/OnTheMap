@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 struct UserManager {
     var accountId: String
     var name: String

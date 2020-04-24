@@ -16,33 +16,16 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var loginButton: UIButton!
     
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loaderIndicator.isHidden = true
+    }
+    
+    
     @IBAction func loginButtonTapped(_ sender: Any) {
         setLoaderIndicator(true)
         UdacityAPI.requestUserSesion(
             username: emailTextField.text ?? "", password: passwordTextField.text ?? "", completionHandler: handlerequestUserSesion(accountId:error:))
-    }
-    
-    func handlerequestUserSesion(accountId: String, error: Error?) {
-        if error != nil {
-            showLoginFailure(message: error!.localizedDescription)
-            return
-        }
-        UdacityAPI.getUserData(accountId: accountId, completionHandler: handleGetUserData(userData:error:))
-    }
-    
-    func handleGetUserData(userData: UserData?, error: Error?) {
-        if error != nil {
-            showLoginFailure(message: error!.localizedDescription)
-            return
-        }
-        
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        var userManager = appDelegate.userManager
-        userManager.name = userData?.firstName ?? ""
-        userManager.lastName = userData?.lastName ?? ""
-        userManager.nickname = userData?.nickname ?? ""
-        setLoaderIndicator(false)
-        performSegue(withIdentifier: "completeLogin", sender: nil)
     }
     
     private func showLoginFailure(message: String) {
@@ -52,11 +35,32 @@ class LoginViewController: UIViewController {
         setLoaderIndicator(false)
     }
     
+    private func handlerequestUserSesion(accountId: String, error: Error?) {
+        if error != nil {
+            showLoginFailure(message: error!.localizedDescription)
+            return
+        }
+        UdacityAPI.getUserData(accountId: accountId, completionHandler: handleGetUserData(userData:error:))
+    }
+    
+    private func handleGetUserData(userData: UserData?, error: Error?) {
+        if error != nil {
+            showLoginFailure(message: error!.localizedDescription)
+            return
+        }
+        
+        SessionManager.userData = userData
+        setLoaderIndicator(false)
+        performSegue(withIdentifier: "completeLogin", sender: nil)
+    }
+    
     private func setLoaderIndicator(_ loggingIn: Bool) {
         if loggingIn {
             loaderIndicator.startAnimating()
+            loaderIndicator.isHidden = false
         } else {
             loaderIndicator.stopAnimating()
+            loaderIndicator.isHidden = true
         }
         emailTextField.isEnabled = !loggingIn
         passwordTextField.isEnabled = !loggingIn
@@ -64,4 +68,3 @@ class LoginViewController: UIViewController {
     }
     
 }
-
