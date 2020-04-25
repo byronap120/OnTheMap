@@ -12,6 +12,7 @@ import MapKit
 class AddLocationMapViewController: UIViewController , MKMapViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var finishButton: UIButton!
     
     var location: CLLocationCoordinate2D!
     var mediaUrl: String!
@@ -36,10 +37,12 @@ class AddLocationMapViewController: UIViewController , MKMapViewDelegate {
     }
         
     @IBAction func postStudentLocation(_ sender: Any) {
+        finishButton.isEnabled = false
         UdacityAPI.postStudentLocation(mapString: userLocation, mediaUrl: mediaUrl, latitude: location.latitude, longitude: location.longitude, completionHandler: handlePostStudent(success:error:))
     }
     
     private func handlePostStudent(success: Bool, error: Error?) {
+        finishButton.isEnabled = true
         if error != nil {
             showAlertMessage(title: "Error", message: error!.localizedDescription)
             return

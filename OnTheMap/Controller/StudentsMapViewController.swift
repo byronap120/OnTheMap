@@ -19,9 +19,9 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate {
     }
     
     @IBAction func refreshStudentsLocation(_ sender: Any) {
-         getStudentsLocation()
+        getStudentsLocation()
     }
-
+    
     private func getStudentsLocation(){
         UdacityAPI.getStudentLocation(completionHandler: handleGetStudentLocation(studentsLocation:error:))
     }
@@ -68,15 +68,12 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate {
         return pinView
     }
     
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if control == view.rightCalloutAccessoryView {
+            if let mediaUrl = view.annotation?.subtitle! {
+                launchSafariWith(url: mediaUrl)
+            }
+        }
+    }
     
 }

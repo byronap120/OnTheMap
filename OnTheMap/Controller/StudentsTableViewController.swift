@@ -47,4 +47,10 @@ class StudentsTableViewController: UIViewController , UITableViewDataSource, UIT
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let studentLocation = SessionManager.studentsLocation[indexPath.row]
+        tableView.deselectRow(at: indexPath, animated: true)
+        launchSafariWith(url: studentLocation.mediaURL)
+    }
 }
