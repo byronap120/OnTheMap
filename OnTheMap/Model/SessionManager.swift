@@ -9,6 +9,7 @@
 import Foundation
 
 class SessionManager {
-    static var userData: UserData? = nil
+    static var userAccountKey: String?
+    static var userData: UserData?
     static var studentsLocation = [StudentLocation]()
 }
