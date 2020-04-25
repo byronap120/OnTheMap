@@ -27,7 +27,7 @@ class StudentsTableViewController: UIViewController , UITableViewDataSource, UIT
     
     private func handleGetStudentLocation(studentsLocation: [StudentLocation]?, error: Error?) {
         if error != nil {
-            //showLoginFailure(message: error!.localizedDescription)
+            showAlertMessage(title: "Error", message: "Error loading students locations")
             return
         }
         SessionManager.studentsLocation = studentsLocation!

@@ -17,8 +17,9 @@ class AddLocationMapViewController: UIViewController , MKMapViewDelegate {
     var mediaUrl: String!
     var userLocation: String!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         var region: MKCoordinateRegion = self.mapView.region
         region.center = location
@@ -31,10 +32,19 @@ class AddLocationMapViewController: UIViewController , MKMapViewDelegate {
         annotation.title = userLocation
         annotation.subtitle = mediaUrl
         self.mapView.addAnnotation(annotation)
+        self.mapView.selectAnnotation(annotation, animated: true)
+    }
+        
+    @IBAction func postStudentLocation(_ sender: Any) {
+        UdacityAPI.postStudentLocation(mapString: userLocation, mediaUrl: mediaUrl, latitude: location.latitude, longitude: location.longitude, completionHandler: handlePostStudent(success:error:))
     }
     
-    @IBAction func postStudentLocation(_ sender: Any) {
-        
+    private func handlePostStudent(success: Bool, error: Error?) {
+        if error != nil {
+            showAlertMessage(title: "Error", message: error!.localizedDescription)
+            return
+        }
+        self.navigationController?.dismiss(animated: true, completion: nil)
     }
     
     
@@ -50,7 +60,7 @@ class AddLocationMapViewController: UIViewController , MKMapViewDelegate {
         else {
             pinView!.annotation = annotation
         }
-        
+                
         return pinView
     }
 }

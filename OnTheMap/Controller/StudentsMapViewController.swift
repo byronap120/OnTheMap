@@ -18,17 +18,17 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate {
         getStudentsLocation()
     }
     
-//    @IBAction func refreshStudentsLocation(_ sender: Any) {
-//        getStudentsLocation()
-//    }
-    
+    @IBAction func refreshStudentsLocation(_ sender: Any) {
+         getStudentsLocation()
+    }
+
     private func getStudentsLocation(){
         UdacityAPI.getStudentLocation(completionHandler: handleGetStudentLocation(studentsLocation:error:))
     }
     
     private func handleGetStudentLocation(studentsLocation: [StudentLocation]?, error: Error?) {
         if error != nil {
-            //showLoginFailure(message: error!.localizedDescription)
+            showAlertMessage(title: "Error", message: "Error loading students locations")
             return
         }
         SessionManager.studentsLocation = studentsLocation!
@@ -48,7 +48,8 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate {
             
             annotations.append(annotation)
         }
-        self.mapView.addAnnotations(annotations)
+        mapView.removeAnnotations(mapView.annotations)
+        mapView.addAnnotations(annotations)
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {

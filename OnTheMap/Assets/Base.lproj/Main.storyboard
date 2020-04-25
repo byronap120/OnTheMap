@@ -91,7 +91,11 @@
                                     <segue destination="s1x-uV-1i6" kind="show" id="963-JC-ugj"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Item" image="icon_refresh" id="jvn-z6-VI4"/>
+                            <barButtonItem title="Item" image="icon_refresh" id="jvn-z6-VI4">
+                                <connections>
+                                    <action selector="refreshStudentsLocation:" destination="tvD-TM-EBY" id="BGa-BH-M6k"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
@@ -236,6 +240,7 @@
                     <navigationItem key="navigationItem" id="Qz9-cY-eg8"/>
                     <connections>
                         <outlet property="mapView" destination="iSY-sH-Ghh" id="ukB-U8-DOd"/>
+                        <segue destination="2cK-ga-Vd4" kind="show" identifier="studentsLocation" id="0yF-LS-viF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vxA-Qh-bfc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -430,7 +435,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="qGP-oI-krP"/>
+        <segue reference="963-JC-ugj"/>
+        <segue reference="BdD-QF-LgJ"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="icon_addpin" width="24" height="24"/>

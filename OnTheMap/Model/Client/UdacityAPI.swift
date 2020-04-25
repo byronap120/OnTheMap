@@ -17,6 +17,7 @@ class UdacityAPI {
         case deleteUserSession
         case getUserData(String)
         case getStudentLocation
+        case postStudentLocation
         
         var stringValue: String {
             switch self {
@@ -25,7 +26,9 @@ class UdacityAPI {
             case .getUserData(let userId):
                 return Endpoints.base + "/users/" + userId
             case .getStudentLocation:
-                return Endpoints.base + "/StudentLocation?limit=100?order=-updatedAt"
+                return Endpoints.base + "/StudentLocation?order=-updatedAt&limit=100"
+            case .postStudentLocation:
+                return Endpoints.base + "/StudentLocation"
             }
         }
         
@@ -77,7 +80,7 @@ class UdacityAPI {
             }
             let decoder = JSONDecoder()
             let newData = isSecureResponse ? data.subdata(in: (5..<data.count)) : data
-
+            
             do {
                 let responseObject = try decoder.decode(ResponseType.self, from: newData)
                 DispatchQueue.main.async {
@@ -115,7 +118,7 @@ class UdacityAPI {
     }
     
     class func requestUserSesion(
-    username: String, password: String, completionHandler: @escaping (String, Error?) -> Void) {
+        username: String, password: String, completionHandler: @escaping (String, Error?) -> Void) {
         let body = UserSessionRequest(udacity: UserCredentials(username: username, password: password))
         taskForPOSTRequest(url: Endpoints.createUserSession.url, responseType: UserSession.self, isSecureResponse: true,body: body) { response, error in
             if let response = response {
@@ -129,42 +132,18 @@ class UdacityAPI {
         }
     }
     
-//    class func requestUserSesion(
-//        username: String, password: String, completionHandler: @escaping (String, Error?) -> Void) {
-//
-//        let body = UserSessionRequest(udacity: UserCredentials(username: username, password: password))
-//        var request = URLRequest(url: Endpoints.createUserSession.url)
-//        request.httpMethod = "POST"
-//        request.httpBody = try! JSONEncoder().encode(body)
-//        request.addValue("application/json", forHTTPHeaderField: "Accept")
-//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//
-//        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-//            guard let data = data else {
-//                DispatchQueue.main.async {
-//                    completionHandler("", error)
-//                }
-//                return
-//            }
-//
-//            let newData = data.subdata(in: (5..<data.count))
-//            let decoder = JSONDecoder()
-//
-//            do {
-//                let userSessionResponse = try decoder.decode(UserSession.self, from: newData)
-//                let accountKey  = userSessionResponse.account.key
-//                SessionManager.userAccountKey = accountKey
-//                DispatchQueue.main.async {
-//                    completionHandler(accountKey, nil)
-//                }
-//            } catch {
-//                let error = ErrorResponse(statusMessage: "Invalid User Credentials") as Error
-//                DispatchQueue.main.async {
-//                    completionHandler("", error)
-//                }
-//            }
-//
-//        }
-//        task.resume()
-//    }
+    class func postStudentLocation(
+        mapString: String, mediaUrl: String, latitude: Double, longitude: Double, completionHandler: @escaping (Bool, Error?) -> Void) {
+        let userData = SessionManager.userData!
+        let uniqueKey = SessionManager.userAccountKey!
+        let body = StudentLocationRequest(uniqueKey: uniqueKey, firstName: userData.firstName, lastName: userData.lastName, mapString: mapString, mediaURL: mediaUrl, latitude: latitude, longitude: longitude)
+        taskForPOSTRequest(url: Endpoints.postStudentLocation.url, responseType: StudentLocationPostResponse.self, isSecureResponse: false,body: body) { response, error in
+            if response != nil {
+                completionHandler(true, nil)
+            } else {
+                let error = ErrorResponse(statusMessage: "Error creating student location") as Error
+                completionHandler(false, error)
+            }
+        }
+    }
 }
