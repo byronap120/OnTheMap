@@ -14,6 +14,14 @@ class AddLocationViewController: UIViewController {
     
     @IBOutlet weak var userLocation: UITextField!
     @IBOutlet weak var userMediaURL: UITextField!
+    @IBOutlet weak var loaderIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var locationButton: UIButton!
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loaderIndicator.isHidden = true
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "addLocationMap" {
@@ -26,6 +34,7 @@ class AddLocationViewController: UIViewController {
     }
     
     @IBAction func findUserLocation(_ sender: Any) {
+        self.setLoaderIndicator(true)
         if (userMediaURL.text!.isEmpty) {
             self.showAlertMessage(title: "Error", message: "Media URL cannot be empty")
             return
@@ -39,12 +48,26 @@ class AddLocationViewController: UIViewController {
             }
             let topLocation = placemarks?.first
             let location: CLLocationCoordinate2D = (topLocation?.location?.coordinate)!
+            self.setLoaderIndicator(false)
             self.performSegue(withIdentifier: "addLocationMap", sender: location)
         }
     }
     
     @IBAction func cancelAddLocation(_ sender: Any) {
         self.navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
+    private func setLoaderIndicator(_ loggingIn: Bool) {
+        if loggingIn {
+            loaderIndicator.startAnimating()
+            loaderIndicator.isHidden = false
+        } else {
+            loaderIndicator.stopAnimating()
+            loaderIndicator.isHidden = true
+        }
+        locationButton.isEnabled = !loggingIn
+        userLocation.isEnabled = !loggingIn
+        userMediaURL.isEnabled = !loggingIn
     }
     
 }

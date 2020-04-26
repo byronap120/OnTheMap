@@ -22,6 +22,18 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate {
         getStudentsLocation()
     }
     
+    @IBAction func userLogOut(_ sender: Any) {
+        UdacityAPI.userLogOut(completionHandler: handleUserLogOut(success:error:))
+    }
+    
+    private func handleUserLogOut(success: Bool, error: Error?) {
+        if (error != nil) {
+            showAlertMessage(title: "Error", message: "Error login out user")
+            return
+        }
+        self.navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
     private func getStudentsLocation(){
         UdacityAPI.getStudentLocation(completionHandler: handleGetStudentLocation(studentsLocation:error:))
     }

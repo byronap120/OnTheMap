@@ -95,6 +95,34 @@ class UdacityAPI {
         task.resume()
     }
     
+    class func userLogOut(completionHandler: @escaping (Bool, Error?) -> Void){
+        var request = URLRequest(url: Endpoints.deleteUserSession.url)
+        request.httpMethod = "DELETE"
+        var xsrfCookie: HTTPCookie? = nil
+        let sharedCookieStorage = HTTPCookieStorage.shared
+        for cookie in sharedCookieStorage.cookies! {
+            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
+        }
+        if let xsrfCookie = xsrfCookie {
+            request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
+        }
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { data, response, error in
+            if error != nil {
+                DispatchQueue.main.async {
+                    completionHandler(false, error)
+                }
+                return
+            }
+            let range = (5..<data!.count)
+            let newData = data?.subdata(in: range)
+            DispatchQueue.main.async {
+                completionHandler(true, nil)
+            }
+        }
+        task.resume()
+    }
+    
     class func getUserData(accountId: String, completionHandler: @escaping (UserData?, Error?) -> Void) {
         taskForGETRequest(url: Endpoints.getUserData(accountId).url, responseType: UserData.self, isSecureResponse: true) { response, error in
             if let response = response {
