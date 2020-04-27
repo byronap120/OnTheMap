@@ -12,6 +12,8 @@ class StudentsTableViewController: UIViewController , UITableViewDataSource, UIT
     
     @IBOutlet weak var studentsTableView: UITableView!
     
+    private let errorTitle = "Students Error"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         getStudentsLocation()
@@ -27,7 +29,7 @@ class StudentsTableViewController: UIViewController , UITableViewDataSource, UIT
     
     private func handleUserLogOut(success: Bool, error: Error?) {
         if (error != nil) {
-            showAlertMessage(title: "Error", message: "Error login out user")
+            showAlertMessage(title: errorTitle, message: error?.localizedDescription ?? "")
             return
         }
         self.navigationController?.dismiss(animated: true, completion: nil)
@@ -37,9 +39,9 @@ class StudentsTableViewController: UIViewController , UITableViewDataSource, UIT
         UdacityAPI.getStudentLocation(completionHandler: handleGetStudentLocation(studentsLocation:error:))
     }
     
-    private func handleGetStudentLocation(studentsLocation: [StudentLocation]?, error: Error?) {
+    private func handleGetStudentLocation(studentsLocation: [StudentInformation]?, error: Error?) {
         if error != nil {
-            showAlertMessage(title: "Error", message: "Error loading students locations")
+            showAlertMessage(title: errorTitle, message: error?.localizedDescription ?? "")
             return
         }
         SessionManager.studentsLocation = studentsLocation!

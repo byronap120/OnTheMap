@@ -55,9 +55,15 @@ class UdacityAPI {
                     completion(responseObject, nil)
                 }
             } catch {
-                let error = ErrorResponse(statusMessage: "Unknown Error") as Error
-                DispatchQueue.main.async {
-                    completion(nil, error)
+                do {
+                    let errorResponse = try decoder.decode(ErrorResponse.self, from: newData) as Error
+                    DispatchQueue.main.async {
+                        completion(nil, errorResponse)
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        completion(nil, error)
+                    }
                 }
             }
         }
@@ -87,11 +93,18 @@ class UdacityAPI {
                     completion(responseObject, nil)
                 }
             }catch {
-                let error = ErrorResponse(statusMessage: "Unknown Error") as Error
-                DispatchQueue.main.async {
-                    completion(nil, error)
+                do {
+                    let errorResponse = try decoder.decode(ErrorResponse.self, from: newData) as Error
+                    DispatchQueue.main.async {
+                        completion(nil, errorResponse)
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        completion(nil, error)
+                    }
                 }
-            }        }
+            }
+        }
         task.resume()
     }
     
@@ -114,8 +127,6 @@ class UdacityAPI {
                 }
                 return
             }
-            let range = (5..<data!.count)
-            let newData = data?.subdata(in: range)
             DispatchQueue.main.async {
                 completionHandler(true, nil)
             }
@@ -128,18 +139,16 @@ class UdacityAPI {
             if let response = response {
                 completionHandler(response, nil)
             } else {
-                let error = ErrorResponse(statusMessage: "Invalid User Credentials") as Error
                 completionHandler(nil, error)
             }
         }
     }
     
-    class func getStudentLocation(completionHandler: @escaping ([StudentLocation]?, Error?) -> Void) {
+    class func getStudentLocation(completionHandler: @escaping ([StudentInformation]?, Error?) -> Void) {
         taskForGETRequest(url: Endpoints.getStudentLocation.url, responseType: StudentResponse.self, isSecureResponse: false) { response, error in
             if let response = response {
                 completionHandler(response.results, nil)
             } else {
-                let error = ErrorResponse(statusMessage: "Errog Getting Students locations") as Error
                 completionHandler(nil, error)
             }
         }
@@ -154,7 +163,6 @@ class UdacityAPI {
                 SessionManager.userAccountKey = accountKey
                 completionHandler(accountKey, nil)
             } else {
-                let error = ErrorResponse(statusMessage: "Invalid User Credentials") as Error
                 completionHandler("", error)
             }
         }
@@ -169,7 +177,6 @@ class UdacityAPI {
             if response != nil {
                 completionHandler(true, nil)
             } else {
-                let error = ErrorResponse(statusMessage: "Error creating student location") as Error
                 completionHandler(false, error)
             }
         }

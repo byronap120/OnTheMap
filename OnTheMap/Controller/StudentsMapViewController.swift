@@ -13,6 +13,8 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     
+    private let errorTitle = "Students Error"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         getStudentsLocation()
@@ -28,7 +30,7 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate {
     
     private func handleUserLogOut(success: Bool, error: Error?) {
         if (error != nil) {
-            showAlertMessage(title: "Error", message: "Error login out user")
+            showAlertMessage(title: errorTitle, message: error?.localizedDescription ?? "")
             return
         }
         self.navigationController?.dismiss(animated: true, completion: nil)
@@ -38,9 +40,9 @@ class StudentsMapViewController: UIViewController, MKMapViewDelegate {
         UdacityAPI.getStudentLocation(completionHandler: handleGetStudentLocation(studentsLocation:error:))
     }
     
-    private func handleGetStudentLocation(studentsLocation: [StudentLocation]?, error: Error?) {
+    private func handleGetStudentLocation(studentsLocation: [StudentInformation]?, error: Error?) {
         if error != nil {
-            showAlertMessage(title: "Error", message: "Error loading students locations")
+            showAlertMessage(title: errorTitle, message: error?.localizedDescription ?? "")
             return
         }
         SessionManager.studentsLocation = studentsLocation!

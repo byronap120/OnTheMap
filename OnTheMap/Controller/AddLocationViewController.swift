@@ -17,6 +17,9 @@ class AddLocationViewController: UIViewController {
     @IBOutlet weak var loaderIndicator: UIActivityIndicatorView!
     @IBOutlet weak var locationButton: UIButton!
     
+    private let errorTitle = "Error"
+    private let urlError = "Media URL cannot be empty"
+    private let locationError = "Location not found"
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -36,19 +39,20 @@ class AddLocationViewController: UIViewController {
     @IBAction func findUserLocation(_ sender: Any) {
         self.setLoaderIndicator(true)
         if (userMediaURL.text!.isEmpty) {
-            self.showAlertMessage(title: "Error", message: "Media URL cannot be empty")
+            self.showAlertMessage(title: errorTitle, message: urlError)
+            self.setLoaderIndicator(false)
             return
         }
         
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(userLocation.text!) { (placemarks: [CLPlacemark]?, error: Error?) in
+            self.setLoaderIndicator(false)
             if error != nil || placemarks == nil || placemarks!.count == 0{
-                self.showAlertMessage(title: "Error", message: "Location not found")
+                self.showAlertMessage(title: self.errorTitle, message: self.locationError)
                 return
             }
             let topLocation = placemarks?.first
             let location: CLLocationCoordinate2D = (topLocation?.location?.coordinate)!
-            self.setLoaderIndicator(false)
             self.performSegue(withIdentifier: "addLocationMap", sender: location)
         }
     }

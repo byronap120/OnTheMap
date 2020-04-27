@@ -19,42 +19,38 @@ class LoginViewController: UIViewController {
     private let signUpLink = "https://auth.udacity.com/sign-up"
     private let signUpText = "Don't have an account? Sign Up"
     private let linkText = "Sign Up"
+    private let errorTitle = "Login Error"
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loaderIndicator.isHidden = true
         configureSignUpLink()
     }
-
+    
     @IBAction func loginButtonTapped(_ sender: Any) {
         setLoaderIndicator(true)
         UdacityAPI.requestUserSesion(
             username: emailTextField.text ?? "", password: passwordTextField.text ?? "", completionHandler: handlerequestUserSesion(accountId:error:))
     }
     
-    private func showLoginFailure(message: String) {
-        showAlertMessage(title: "Login Failed", message: message)
-        setLoaderIndicator(false)
-    }
-    
     private func handlerequestUserSesion(accountId: String, error: Error?) {
+        setLoaderIndicator(false)
         if error != nil {
-            showLoginFailure(message: error!.localizedDescription)
+            showAlertMessage(title: errorTitle, message: error?.localizedDescription ?? "")
             return
         }
         UdacityAPI.getUserData(accountId: accountId, completionHandler: handleGetUserData(userData:error:))
     }
     
     private func handleGetUserData(userData: UserData?, error: Error?) {
+        setLoaderIndicator(false)
         if error != nil {
-            showLoginFailure(message: error!.localizedDescription)
+            showAlertMessage(title: errorTitle, message: error?.localizedDescription ?? "")
             return
         }
-        
         SessionManager.userData = userData
-        setLoaderIndicator(false)
-        clearTextViews()
         performSegue(withIdentifier: "completeLogin", sender: nil)
+        clearTextViews()
     }
     
     private func clearTextViews(){
